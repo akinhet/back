@@ -1,0 +1,30 @@
+#!/bin/bash
+
+RESTORE=
+
+ARCHIVE=/backup
+LOG=/var/log/back
+
+FOLDER=/etc
+
+usage() { echo -e "Usage: $0 \n\t[ -r ]\n\t[ -a <backup folder> ]\n\t[ -l <log file> ]\n\t[ -f <folder to back up> ]"; exit 1; }
+
+while getopts ra:l:f: name
+do
+	case $name in
+		r)	RESTORE=1;;
+		a)	ARCHIVE="$OPTARG";;
+		l)	LOG="$OPTARG";;
+		f)	FOLDER="$OPTARG";;
+		*)	usage;;
+	esac
+done
+
+TRIMEDFOLDER=$(echo "$FOLDER" | tr "/" "-" | sed 's/^-//')
+
+if [ ! -z "$RESTORE" ]
+then
+	tar -xvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER
+else
+	tar -cvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER
+fi
