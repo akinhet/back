@@ -20,11 +20,13 @@ do
 	esac
 done
 
-TRIMEDFOLDER=$(echo "$FOLDER" | tr "/" "-" | sed 's/^-//')
+TRIMEDFOLDER=$(echo "$FOLDER" | tr "/" "-" | sed 's/^-//' | sed 's/-$//')
 
 if [ ! -z "$RESTORE" ]
 then
-	tar -xvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER
+	echo -e "\n[$(date +%F-%H:%M)] Unpacking archive $ARCHIVE" >> $LOG
+	tar -xvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER &>> $LOG
 else
-	tar -cvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER
+	echo -e "\n[$(date +%F-%H:%M)] Archiving $FOLDER" >> $LOG
+	tar -cvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER &>> $LOG
 fi
