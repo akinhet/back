@@ -1,0 +1,12 @@
+[Unit]
+Description=Backup /etc every month
+RefuseManualStart=no
+RefuseManualStop=no
+
+[Timer]
+Persistent=true
+OnCalendar=monthly
+Unit=back-etc.service
+
+[Install]
+WantedBy=timers.target

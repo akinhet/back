@@ -2,18 +2,19 @@
 
 RESTORE=
 
-ARCHIVE=/backup
+BACKFOLDER=/backup
 LOG=/var/log/back
 
 FOLDER=/etc
 
 usage() { echo -e "Usage: $0 \n\t[ -r ]\n\t[ -a <backup folder> ]\n\t[ -l <log file> ]\n\t[ -f <folder to back up> ]"; exit 1; }
 
-while getopts ra:l:f: name
+while getopts ra:b:l:f: name
 do
 	case $name in
 		r)	RESTORE=1;;
 		a)	ARCHIVE="$OPTARG";;
+		b)	BACKFOLDER="$OPTARG";;
 		l)	LOG="$OPTARG";;
 		f)	FOLDER="$OPTARG";;
 		*)	usage;;
@@ -24,9 +25,9 @@ TRIMEDFOLDER=$(echo "$FOLDER" | tr "/" "-" | sed 's/^-//' | sed 's/-$//')
 
 if [ ! -z "$RESTORE" ]
 then
-	echo -e "\n[$(date +%F-%H:%M)] Unpacking archive $ARCHIVE" >> $LOG
-	tar -xvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER &>> $LOG
+	echo -e "\n[$(date +%F-%H:%M:%S)] Unpacking archive $ARCHIVE" >> $LOG
+	tar -xvvg $BACKFOLDER/$TRIMEDFOLDER.snar -f $ARCHIVE $FOLDER &>> $LOG
 else
-	echo -e "\n[$(date +%F-%H:%M)] Archiving $FOLDER" >> $LOG
-	tar -cvvg $ARCHIVE/$TRIMEDFOLDER.snar -f $ARCHIVE/$TRIMEDFOLDER-$(date +%F-%H:%M).tar $FOLDER &>> $LOG
+	echo -e "\n[$(date +%F-%H:%M:%S)] Archiving $FOLDER" >> $LOG
+	tar -cvvg $BACKFOLDER/$TRIMEDFOLDER.snar -f $BACKFOLDER/$TRIMEDFOLDER-$(date +%F-%H:%M:%S).tar $FOLDER &>> $LOG
 fi

@@ -1,0 +1,9 @@
+[Unit]
+Description=Test of timers
+
+[Service]
+Type=simple
+ExecStart=/home/akinhet/git/back/back -f /etc
+
+[Install]
+WantedBy=default.target
